@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/midnightntwrk/compact/main/schemas/compiler.json",
+  "language_version": "0.20.0",
+  "targets": {
+    "priva_pass": {
+      "main": "priva_pass.compact",
+      "output_directory": "./managed"
+    }
+  }
+}
