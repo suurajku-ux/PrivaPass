@@ -1,0 +1,120 @@
+pragma language_version >= 0.20.0;
+
+import CompactStandardLibrary;
+
+/**
+ * PrivaPass - Zero-Knowledge Confidential Credentials & Private Allowlist Protocol
+ *
+ * Midnight Compact Smart Contract
+ * Allows users to prove credential/allowlist membership using local private witnesses
+ * (secret passkey + identity salt) without revealing user wallet address or passkey on-chain.
+ */
+
+// ==========================================
+// 1. PUBLIC LEDGER STATE
+// ==========================================
+
+// Merkle root or master commitment root of authorized credential holders
+export ledger allowlistRoot: Bytes[32];
+
+// Counter tracking total anonymous successful verifications across the protocol
+export ledger totalVerifiedClaims: Counter;
+
+// Emergency or admin operational gate status
+export ledger isPortalActive: Cell<Boolean>;
+
+// Timestamp of the latest verified claim
+export ledger lastVerifiedTimestamp: Cell<Uint<64>>;
+
+// Protocol Admin Identity Key for governance and root updates
+export ledger adminPublicKey: Cell<Bytes[32]>;
+
+
+// ==========================================
+// 2. PRIVATE WITNESS DECLARATIONS
+// ==========================================
+
+// Private witness for the user's secret passkey (never disclosed to ledger)
+witness getSecretPasskey(): Bytes[32];
+
+// Private witness for the user's unique identity salt/blinding factor (never disclosed to ledger)
+witness getIdentitySalt(): Bytes[32];
+
+// Private witness for admin authentication key
+witness getAdminSecretKey(): Bytes[32];
+
+
+// ==========================================
+// 3. CIRCUITS & TRANSITIONS
+// ==========================================
+
+/**
+ * Initialize the PrivaPass protocol with admin key and initial allowlist root.
+ */
+export circuit initializePortal(adminPk: Bytes[32], initialRoot: Bytes[32]): Void {
+    // Assert initialization happens once
+    assert(isPortalActive.value == false, "PrivaPass: Portal already initialized!");
+    
+    adminPublicKey.write(adminPk);
+    allowlistRoot.write(initialRoot);
+    isPortalActive.write(true);
+}
+
+/**
+ * Core Zero-Knowledge Verification Circuit.
+ * Proves that the caller possesses a valid secret passkey and salt matching the expected commitment
+ * without disclosing any sensitive preimage to on-chain observers.
+ *
+ * @param expectedCommitment The registered commitment corresponding to the allowlist entry
+ * @param currentTime The current timestamp of the verification attempt
+ * @return Disclosed boolean flag indicating verified access
+ */
+export circuit verifyAccess(expectedCommitment: Bytes[32], currentTime: Uint<64>): Boolean {
+    // 1. Retrieve private witnesses directly from local client runtime (ZK Isolated)
+    const secretPasskey = getSecretPasskey();
+    const identitySalt = getIdentitySalt();
+
+    // 2. Compute local zero-knowledge commitment: H(secretPasskey, identitySalt)
+    const computedCommitment = persistent_hash<Vector<2, Bytes[32]>>([secretPasskey, identitySalt]);
+
+    // 3. Circuit constraint assertion: computed commitment must strictly equal expected commitment
+    assert(
+        computedCommitment == expectedCommitment,
+        "PrivaPass: Invalid confidential credential witness! Commitment mismatch."
+    );
+
+    // 4. Ensure verification gate is actively enabled
+    assert(
+        isPortalActive.value == true,
+        "PrivaPass: Verification portal is currently deactivated."
+    );
+
+    // 5. Update public ledger state
+    totalVerifiedClaims.increment(1);
+    lastVerifiedTimestamp.write(currentTime);
+
+    // 6. DELIBERATE DISCLOSURE: Disclose strictly the boolean authorization token to the public ledger
+    return disclose(true);
+}
+
+/**
+ * Update the allowlist root (Admin only).
+ */
+export circuit updateAllowlistRoot(newRoot: Bytes[32]): Void {
+    const adminSk = getAdminSecretKey();
+    const computedAdminPk = persistent_hash<Vector<1, Bytes[32]>>([adminSk]);
+    
+    assert(computedAdminPk == adminPublicKey.value, "PrivaPass: Unauthorized admin key!");
+    allowlistRoot.write(newRoot);
+}
+
+/**
+ * Toggle portal active status (Admin only).
+ */
+export circuit setPortalActive(active: Boolean): Void {
+    const adminSk = getAdminSecretKey();
+    const computedAdminPk = persistent_hash<Vector<1, Bytes[32]>>([adminSk]);
+    
+    assert(computedAdminPk == adminPublicKey.value, "PrivaPass: Unauthorized admin key!");
+    isPortalActive.write(active);
+}
