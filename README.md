@@ -1,10 +1,14 @@
 # 🛡️ PrivaPass: Zero-Knowledge Confidential Credentials & Private Allowlist Protocol
 
-[![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-8b5cf6?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
-[![Smart Contract](https://img.shields.io/badge/Contract-Compact_v0.20+-06b6d4?style=flat-square)](contract/priva_pass.compact)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-priva--pass--mocha.vercel.app-8b5cf6?style=flat-square&logo=vercel)](https://priva-pass-mocha.vercel.app/)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
+[![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-06b6d4?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
+[![Smart Contract](https://img.shields.io/badge/Contract-Compact_v0.20+-70FFBE?style=flat-square)](contract/priva_pass.compact)
 [![Tests](https://img.shields.io/badge/Tests-5%2F5_Passing-10b981?style=flat-square)](tests/priva_pass.test.ts)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
-[![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
+
+> 🚀 **Live dApp Website**: **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)**  
+> 📹 **Interactive Demo Video**: **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)**
 
 > **Production-Grade Midnight Network Decentralized Application (dApp)**  
 > Built with **Midnight Compact**, **Midnight.js SDK**, **Lace Wallet Connector**, and **Next.js / Tailwind CSS**.
@@ -16,6 +20,7 @@
 | Parameter | Value |
 |---|---|
 | **Contract Name** | `PrivaPassProtocol` |
+| **Live Web Application** | **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)** |
 | **Demo Video Walkthrough** | **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)** |
 | **Contract ID (Hex)** | `0x9a4f2c18d7b3e5a0c9e1f3d5b7a9c2e4f6a8b0d2e4f6a8b0c2d4e6f8a0b2c4d6` |
 | **Bech32 Contract Address** | `mn_contract_preprod1qzk98a4f2c18d7b3e5a0c9e1f3d5b7a9c2e4f6a8b0d2e4` |
@@ -223,6 +228,7 @@ Every commit and pull request triggers an automated GitHub Actions pipeline ([`.
 | **Author / Developer** | [suurajku-ux](https://github.com/suurajku-ux) |
 | **GitHub Profile** | [https://github.com/suurajku-ux](https://github.com/suurajku-ux) |
 | **Project Repository** | [https://github.com/suurajku-ux/PrivaPass](https://github.com/suurajku-ux/PrivaPass) |
+| **Live Web App (Vercel)** | [https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/) |
 | **Demo Video Walkthrough** | [https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9) |
 | **Target Network** | Midnight Preprod Testnet |
 | **Contract Language** | Midnight Compact (`v0.20+`) |
