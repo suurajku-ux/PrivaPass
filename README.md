@@ -3,6 +3,7 @@
 [![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-8b5cf6?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
 [![Smart Contract](https://img.shields.io/badge/Contract-Compact_v0.20+-06b6d4?style=flat-square)](contract/priva_pass.compact)
 [![Tests](https://img.shields.io/badge/Tests-5%2F5_Passing-10b981?style=flat-square)](tests/priva_pass.test.ts)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
 [![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
 
 > **Production-Grade Midnight Network Decentralized Application (dApp)**  
@@ -196,15 +197,21 @@ npm test
 
 ---
 
-## 🔄 7. CI/CD Pipeline
+## 🔄 7. CI/CD Pipeline (GitHub Actions)
 
-Continuous integration is automated via GitHub Actions in [`.github/workflows/ci.yml`](.github/workflows/ci.yml). On every push or pull request to `main`/`master`, the pipeline:
-1. Sets up the Node.js runtime.
-2. Installs dependencies (`npm ci`).
-3. Runs TypeScript type checking (`npx tsc --noEmit`).
-4. Validates Compact contract syntax and configuration.
-5. Executes the complete Vitest test suite.
-6. Builds the production Next.js bundle (`npm run build`).
+Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validating Compact contract syntax, executing the 5-part Vitest test suite, and creating an optimized Next.js production build:
+
+<div align="center">
+  <img src="image-1.png" alt="PrivaPass GitHub Actions CI/CD Pipeline Passing" width="850" />
+  <p><em>Figure: Automated GitHub Actions CI/CD pipeline runs verifying build integrity, Compact smart contract syntax, and test suites.</em></p>
+</div>
+
+### ⚙️ Pipeline Verification Steps:
+1. **Repository Checkout & Environment Setup**: Checks out source code and configures Node.js v22 runtime with npm caching.
+2. **TypeScript Static Typecheck**: Executes strict `npx tsc --noEmit` across all modules.
+3. **Compact Contract Linting & Verification**: Validates `contract/priva_pass.compact` syntax and `compiler.json` configuration.
+4. **Automated Test Suite**: Runs all 5 Vitest unit and integration tests (`npm test`).
+5. **Production Build Generation**: Compiles and verifies the optimized Next.js static production bundle (`npm run build`).
 
 ---
 
