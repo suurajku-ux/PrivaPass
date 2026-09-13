@@ -16,6 +16,7 @@
 | Parameter | Value |
 |---|---|
 | **Contract Name** | `PrivaPassProtocol` |
+| **Demo Video Walkthrough** | **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)** |
 | **Contract ID (Hex)** | `0x9a4f2c18d7b3e5a0c9e1f3d5b7a9c2e4f6a8b0d2e4f6a8b0c2d4e6f8a0b2c4d6` |
 | **Bech32 Contract Address** | `mn_contract_preprod1qzk98a4f2c18d7b3e5a0c9e1f3d5b7a9c2e4f6a8b0d2e4` |
 | **Target Network** | Midnight Preprod Testnet |
