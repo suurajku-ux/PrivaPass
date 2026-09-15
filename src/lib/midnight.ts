@@ -3,7 +3,7 @@ import { PRESET_ALLOWLIST_ENTRIES } from './crypto';
 
 // Default Initial Contract State on Preprod Testnet
 export const INITIAL_LEDGER_STATE: ContractLedgerState = {
-  allowlistRoot: '0x9a4f2c18d7b3e5a0c9e1f3d5b7a9c2e4f6a8b0d2e4f6a8b0c2d4e6f8a0b2c4d6',
+  allowlistRoot: '0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d',
   totalVerifiedClaims: 142,
   isPortalActive: true,
   lastVerifiedTimestamp: 1726140000000,
