@@ -28,6 +28,7 @@ import { type WalletFacade } from '@midnight-ntwrk/wallet-sdk-facade';
 import type { Logger } from 'pino';
 
 import { getInitialShieldedState } from './wallet-utils.js';
+import { normalizeSeed } from './mnemonic-utils.js';
 import {
   type DustWalletOptions,
   type EnvironmentConfiguration,
@@ -138,7 +139,8 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
       },
     };
 
-    const seeds = seed ? WalletSeeds.fromMasterSeed(seed) : WalletSeeds.generateRandom();
+    const normalizedSeed = seed ? normalizeSeed(seed) : undefined;
+    const seeds = normalizedSeed ? WalletSeeds.fromMasterSeed(normalizedSeed) : WalletSeeds.generateRandom();
     const keystore = createKeystore(seeds.unshielded, env.walletNetworkId as any);
 
     const unshieldedWallet = WalletFactory.createUnshieldedWallet(walletConfig as any, keystore);
