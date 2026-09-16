@@ -1,0 +1,116 @@
+// ============================================================================
+// PrivaPass - Zero-Knowledge Confidential Credentials & Private Allowlist Protocol
+// ----------------------------------------------------------------------------
+// PRIVACY MODEL
+//
+//   PUBLIC LEDGER STATE (on-chain, queryable by anyone):
+//     - allowlistRoot   : Merkle root committing to authorized credential holders.
+//     - issuer          : Public key of the issuer authorized to publish roots.
+//     - accessGranted   : Public counter tracking total verified confidential check-ins.
+//     - nullifiers      : Set of spent nullifiers to prevent credential replay attacks.
+//
+//   PRIVATE WITNESS STATE (supplied locally in client runtime, never disclosed to ledger):
+//     - secretKey       : Private identity secret / passkey known only to user.
+//     - merklePath      : Sibling hashes proving inclusion under allowlistRoot.
+//     - pathDirections  : Tree traversal bit vector.
+//
+//   ZERO-KNOWLEDGE CIRCUIT PROOF:
+//     Proves that caller possesses secretKey whose derived leaf is included
+//     under allowlistRoot, and that secretKey has not been spent before.
+//     Verifier learns strictly: Valid authorization (disclose true).
+// ============================================================================
+
+pragma language_version >= 0.15;
+
+import CompactStandardLibrary;
+
+export ledger allowlistRoot: Bytes<32>;
+export ledger issuer: ZswapCoinPublicKey;
+export ledger accessGranted: Counter;
+export ledger nullifiers: Set<Bytes<32>>;
+
+// ----------------------------------------------------------------------------
+// Private Witness Declarations
+// ----------------------------------------------------------------------------
+witness secretKey(): Bytes<32>;
+witness merklePath(): Vector<5, Bytes<32>>;
+witness pathDirections(): Vector<5, Boolean>;
+
+// ----------------------------------------------------------------------------
+// Constructor - Initializes contract with the initial allowlist root
+// ----------------------------------------------------------------------------
+constructor(initialRoot: Bytes<32>) {
+  allowlistRoot = disclose(initialRoot);
+  issuer = ownPublicKey();
+}
+
+// ----------------------------------------------------------------------------
+// publishAllowlist - Issuer rotates the committed allowlist root
+// ----------------------------------------------------------------------------
+export circuit publishAllowlist(newRoot: Bytes<32>): [] {
+  assert(ownPublicKey() == issuer, "PrivaPass: Only the issuer may update the allowlist root");
+  allowlistRoot = disclose(newRoot);
+}
+
+// ----------------------------------------------------------------------------
+// leafOf - Derives a member's leaf commitment from their secret key
+// ----------------------------------------------------------------------------
+circuit leafOf(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "privapass:leaf"), secret]);
+}
+
+// ----------------------------------------------------------------------------
+// nullifierOf - Deterministic one-way nullifier derived from secret key
+// ----------------------------------------------------------------------------
+circuit nullifierOf(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "privapass:null"), secret]);
+}
+
+// ----------------------------------------------------------------------------
+// merkleRootFrom - Recomputes Merkle root from leaf and private witness path
+// ----------------------------------------------------------------------------
+circuit merkleRootFrom(
+  leaf: Bytes<32>,
+  path: Vector<5, Bytes<32>>,
+  directions: Vector<5, Boolean>
+): Bytes<32> {
+  const h0 = directions[0] ? persistentHash<Vector<2, Bytes<32>>>([path[0], leaf]) : persistentHash<Vector<2, Bytes<32>>>([leaf, path[0]]);
+  const h1 = directions[1] ? persistentHash<Vector<2, Bytes<32>>>([path[1], h0]) : persistentHash<Vector<2, Bytes<32>>>([h0, path[1]]);
+  const h2 = directions[2] ? persistentHash<Vector<2, Bytes<32>>>([path[2], h1]) : persistentHash<Vector<2, Bytes<32>>>([h1, path[2]]);
+  const h3 = directions[3] ? persistentHash<Vector<2, Bytes<32>>>([path[3], h2]) : persistentHash<Vector<2, Bytes<32>>>([h2, path[3]]);
+  const h4 = directions[4] ? persistentHash<Vector<2, Bytes<32>>>([path[4], h3]) : persistentHash<Vector<2, Bytes<32>>>([h3, path[4]]);
+  return h4;
+}
+
+// ----------------------------------------------------------------------------
+// verifyAccess - Core confidential verification circuit
+// ----------------------------------------------------------------------------
+export circuit verifyAccess(): [] {
+  const secret = secretKey();
+  const leaf = leafOf(secret);
+  const path = merklePath();
+  const directions = pathDirections();
+
+  const candidateRoot = merkleRootFrom(leaf, path, directions);
+  assert(candidateRoot == allowlistRoot, "PrivaPass: Not a member of the current allowlist");
+
+  const nullifier = nullifierOf(secret);
+  assert(!nullifiers.member(disclose(nullifier)), "PrivaPass: This credential has already been verified");
+
+  nullifiers.insert(disclose(nullifier));
+  accessGranted.increment(1);
+}
+
+// ----------------------------------------------------------------------------
+// checkAccess alias for backward-compatibility
+// ----------------------------------------------------------------------------
+export circuit checkAccess(): [] {
+  verifyAccess();
+}
+
+// ----------------------------------------------------------------------------
+// publicStats - Read-only circuit for public ledger state queries
+// ----------------------------------------------------------------------------
+export circuit publicStats(): [Bytes<32>, Uint<64>] {
+  return [allowlistRoot, accessGranted as Uint<64>];
+}

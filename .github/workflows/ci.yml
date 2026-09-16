@@ -22,21 +22,24 @@ jobs:
           cache: 'npm'
 
       - name: 📦 Install Dependencies
-        run: npm ci || npm install
+        run: npm ci || npm install --legacy-peer-deps
 
       - name: 🔍 TypeScript Typecheck
         run: npx tsc --noEmit
 
-      - name: 🛡️ Validate Midnight Compact Contract
+      - name: 🛡️ Compile & Validate Midnight Compact Contract
         run: |
-          echo "Validating Compact contract syntax: contract/priva_pass.compact"
-          test -f contract/priva_pass.compact || (echo "Contract file not found" && exit 1)
-          if command -v compact &> /dev/null; then
-            echo "Running compact compile..."
-            compact compile contract/priva_pass.compact --output contract/managed
-          else
-            echo "Compact compiler not in PATH, verified contract syntax and compiler.json"
-          fi
+          echo "Installing Midnight Compact Compiler..."
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
+          compact update 0.31.1 || compact update 0.31.0
+          compact --version
+          
+          echo "Compiling canonical priva_pass.compact..."
+          mkdir -p contract/managed
+          compact compile contract/priva_pass.compact ./contract/managed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🧪 Run PrivaPass Test Suite
         run: npm test

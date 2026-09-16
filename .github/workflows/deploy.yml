@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'contracts/**'
+      - 'contract/**'
       - 'preprod-deployment/**'
       - '.github/workflows/deploy.yml'
 
@@ -27,7 +28,7 @@ jobs:
 
       - name: Copy Contract
         run: |
-          cp contracts/gatecheck.compact preprod-deployment/contracts/src/bboard.compact
+          cp contracts/priva_pass.compact preprod-deployment/contracts/src/priva_pass.compact
 
       - name: Compile Contract
         run: |
@@ -36,7 +37,8 @@ jobs:
           compact update 0.31.1 || compact update 0.31.0
           compact --version
           cd preprod-deployment/contracts
-          compact compile src/bboard.compact ./src/managed/bboard
+          mkdir -p src/managed/priva_pass
+          compact compile src/priva_pass.compact ./src/managed/priva_pass
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
@@ -58,7 +60,7 @@ jobs:
       - name: Deploy Contract
         run: |
           cd preprod-deployment/cli
-          npx tsx src/launcher/deploy-gatecheck.ts
+          npx tsx src/launcher/deploy-privapass.ts
         env:
           NODE_OPTIONS: "--max-old-space-size=8192 --expose-gc"
           WALLET_SEED: ${{ secrets.WALLET_SEED || 'a669546dc647c8799538446cfa46bf22db943fde032f1a696ef4f1466d443d29' }}
