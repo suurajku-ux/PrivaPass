@@ -22,8 +22,8 @@
 | **Contract Name** | `PrivaPassProtocol` / `Gatecheck` |
 | **Live Web Application** | **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)** |
 | **Demo Video Walkthrough** | **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)** |
-| **Deployed Contract Address** | `f625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d` |
-| **Midnight Explorer Link** | **[https://preprod.midnight.network/contract/f625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d](https://preprod.midnight.network/contract/f625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d)** |
+| **Deployed Contract Address** | `0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d` |
+| **Midnight Explorer Link** | **[https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d](https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d)** |
 | **Target Network** | Midnight Preprod Testnet |
 | **Deployment Pipeline** | Automated GitHub Actions (`.github/workflows/deploy.yml`) |
 | **Smart Contract Language** | **Midnight Compact (`v0.20+`)** |
