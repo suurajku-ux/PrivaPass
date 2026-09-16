@@ -15,12 +15,14 @@ import { getUnshieldedAddress } from '../wallet-utils.js';
 import { generateDust } from '../generate-dust.js';
 import { unshieldedToken } from '@midnight-ntwrk/midnight-js-protocol/ledger';
 import { FaucetClient } from '@midnight-ntwrk/testkit-js';
-import { setNetworkId, NetworkId } from '@midnight-ntwrk/midnight-js-network-id';
+import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 import * as Rx from 'rxjs';
 
 async function main() {
   console.log("Starting PrivaPass deployment to Midnight Preprod...");
-  setNetworkId(NetworkId.Preprod);
+  try {
+    setNetworkId('preprod');
+  } catch {}
 
   const seed = process.env.WALLET_SEED;
   if (!seed) throw new Error("WALLET_SEED environment variable is required");
