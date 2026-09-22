@@ -1,5 +1,10 @@
-# 🛡️ PrivaPass: Zero-Knowledge Confidential Credentials & Private Allowlist Protocol
+<div align="center">
+  <img src="public/logo.svg" alt="PrivaPass Logo" width="130" />
+  <h1>🛡️ PrivaPass: Zero-Knowledge Confidential Credentials & Private Allowlist Protocol</h1>
+  <p><strong>Visible Proof. Invisible Data. Native Midnight Network Protocol.</strong></p>
+</div>
 
+[![Product X Profile](https://img.shields.io/badge/Product_X_Profile-@PrivaPassZK-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/PrivaPassZK)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-priva--pass--mocha.vercel.app-8b5cf6?style=flat-square&logo=vercel)](https://priva-pass-mocha.vercel.app/)
 [![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
 [![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-06b6d4?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
@@ -7,6 +12,7 @@
 [![Tests](https://img.shields.io/badge/Tests-5%2F5_Passing-10b981?style=flat-square)](tests/priva_pass.test.ts)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
 
+> 🐦 **Official Product X Profile**: **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`)  
 > 🚀 **Live dApp Website**: **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)**  
 > 📹 **Interactive Demo Video**: **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)**
 
@@ -20,6 +26,7 @@
 | Parameter | Value |
 |---|---|
 | **Contract Name** | `PrivaPassProtocol` / `Gatecheck` |
+| **Official Product X Profile** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`) |
 | **Live Web Application** | **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)** |
 | **Demo Video Walkthrough** | **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)** |
 | **Deployed Contract Address** | `0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d` |
@@ -137,9 +144,31 @@ The smart contract is written in Midnight's **Compact** language (`>= 0.20.0`) a
 
 ---
 
-## 💻 4. Frontend Architecture & Design
+## 🐦 4. Step 4: Active Product X (Twitter) Profile
+
+As part of the mandatory **Level-3 Midnight Ecosystem Submission Criteria (Step 4: Product X Profile)**, PrivaPass maintains an active public social presence on X (formerly Twitter) dedicated to communicating zero-knowledge architecture updates, Midnight Preprod deployment milestones, and developer engagement.
+
+[![Follow on X](https://img.shields.io/badge/Follow_on_X-@PrivaPassZK-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/PrivaPassZK)
+
+| Parameter | Official Value |
+|---|---|
+| **Product X (Twitter) URL** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** |
+| **Product X Handle** | `@PrivaPassZK` |
+| **Product Bio** | *"Zero-Knowledge Confidential Credentials & Private Allowlist Protocol built natively on Midnight Network with Compact smart contracts. Visible proof, invisible data."* |
+| **Developer / Author Handle** | **[@suurajku_ux](https://x.com/suurajku_ux)** |
+| **Primary Topics Covered** | • Midnight Compact v0.20+ Circuit constraints and witness sandboxing<br/>• In-browser ZK-SNARK proof generation with Lace wallet integration<br/>• Preprod testnet contract deployment logs and public state verification events<br/>• Confidential DAO governance & accredited investor allowlists |
+
+### 📢 Recent Product X Announcements & Updates:
+1. **Genesis Protocol Launch Announcement**: Introducing PrivaPass on Midnight Preprod testnet with zero-knowledge private witness isolation and Compact v0.20 smart contracts.
+2. **Circuit Verification Benchmarks**: 100% confidential passkey and identity salt commitment evaluations with `disclose(true)` selective ledger reporting.
+3. **Lace Wallet DApp Connector Integration**: Seamless in-browser proof authorization on Midnight Preprod testnet.
+
+---
+
+## 💻 5. Frontend Architecture & Design
 
 Built with **Next.js (App Router)**, **Tailwind CSS**, and **Lucide Icons** adhering to an **Electric Violet & Obsidian Dark Cyber Aesthetic**:
+- **Bespoke PrivaPass Brand Logo**: Custom vector cryptographic shield with glowing ZK aperture and Midnight neon gradient.
 - **Lace Wallet Connector**: Seamless connection with account address, tDU balance, and Preprod network health.
 - **Live Verification Radar**: Animated radar sweeping component tracking real-time verified claims counter and allowlist root state.
 - **Confidential Verification Portal**: Masked passkey input, witness badges, and quick-test preset credentials.
@@ -148,7 +177,7 @@ Built with **Next.js (App Router)**, **Tailwind CSS**, and **Lucide Icons** adhe
 
 ---
 
-## 🛠️ 5. Getting Started & Local Setup
+## 🛠️ 6. Getting Started & Local Setup
 
 ### Prerequisites
 - **Node.js**: v20.x or v22.x+
@@ -181,7 +210,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to interact 
 
 ---
 
-## 🧪 6. Automated Testing Suite (100% Passing)
+## 🧪 7. Automated Testing Suite (100% Passing)
 
 PrivaPass includes a comprehensive Vitest automated test suite verifying all Compact ZK circuit constraints, private witness isolation, and Preprod state assertions:
 
@@ -204,7 +233,7 @@ npm test
 
 ---
 
-## 🔄 7. CI/CD Pipeline (GitHub Actions)
+## 🔄 8. CI/CD Pipeline (GitHub Actions)
 
 Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validating Compact contract syntax, executing the 5-part Vitest test suite, and creating an optimized Next.js production build:
 
@@ -226,7 +255,9 @@ Every commit and pull request triggers an automated GitHub Actions pipeline ([`.
 
 | Parameter | Link / Reference |
 |---|---|
+| **Official Product X (Twitter)** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`) |
 | **Author / Developer** | [suurajku-ux](https://github.com/suurajku-ux) |
+| **Developer X (Twitter)** | [https://x.com/suurajku_ux](https://x.com/suurajku_ux) (`@suurajku_ux`) |
 | **GitHub Profile** | [https://github.com/suurajku-ux](https://github.com/suurajku-ux) |
 | **Project Repository** | [https://github.com/suurajku-ux/PrivaPass](https://github.com/suurajku-ux/PrivaPass) |
 | **Live Web App (Vercel)** | [https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/) |

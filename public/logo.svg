@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.35" />
+      <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#050508" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Shield Neon Gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="40%" stop-color="#8b5cf6" />
+      <stop offset="80%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <!-- Inner Core Gradient -->
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="250" cy="240" r="210" fill="url(#bgGlow)" />
+
+  <!-- Outer Protective Halo Grid -->
+  <circle cx="250" cy="240" r="190" stroke="#8b5cf6" stroke-width="1.5" stroke-opacity="0.25" stroke-dasharray="8 6" />
+  <circle cx="250" cy="240" r="170" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.3" />
+
+  <!-- Circuit Trace Accents -->
+  <path d="M 80 240 L 120 240 L 145 265" stroke="#8b5cf6" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round" />
+  <circle cx="80" cy="240" r="3.5" fill="#8b5cf6" />
+  <circle cx="145" cy="265" r="3" fill="#06b6d4" />
+
+  <path d="M 420 240 L 380 240 L 355 215" stroke="#06b6d4" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round" />
+  <circle cx="420" cy="240" r="3.5" fill="#06b6d4" />
+  <circle cx="355" cy="215" r="3" fill="#8b5cf6" />
+
+  <!-- Outer Cryptographic Shield Contour -->
+  <path d="M 250 70 
+           L 380 125 
+           C 380 260 330 350 250 420 
+           C 170 350 120 260 120 125 
+           Z" 
+        fill="#0b0918" 
+        stroke="url(#shieldGrad)" 
+        stroke-width="8" 
+        stroke-linejoin="round"
+        filter="url(#neonFilter)" />
+
+  <!-- Inner Faceted Shield Geometry -->
+  <path d="M 250 95 
+           L 355 140 
+           C 355 248 315 324 250 385 
+           C 185 324 145 248 145 140 
+           Z" 
+        fill="#120e26" 
+        stroke="#8b5cf6" 
+        stroke-width="2.5" 
+        stroke-opacity="0.6" />
+
+  <!-- Zero-Knowledge Concentric Rings & Aperture -->
+  <circle cx="250" cy="225" r="62" stroke="#06b6d4" stroke-width="2" stroke-opacity="0.5" stroke-dasharray="10 5" />
+  <circle cx="250" cy="225" r="48" fill="#1b143a" stroke="url(#coreGrad)" stroke-width="3.5" filter="url(#subtleGlow)" />
+
+  <!-- Keyhole & Vault Node -->
+  <path d="M 250 200 
+           C 241 200 234 207 234 216 
+           C 234 222 238 227 243 229.5 
+           L 241 254 
+           L 259 254 
+           L 257 229.5 
+           C 262 227 266 222 266 216 
+           C 266 207 259 200 250 200 Z" 
+        fill="#ffffff" 
+        filter="url(#subtleGlow)" />
+
+  <!-- Angular ZK Disclose Checkmark Accent -->
+  <path d="M 222 285 L 244 307 L 282 265" 
+        stroke="#10b981" 
+        stroke-width="5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        filter="url(#subtleGlow)" />
+
+  <!-- Hexagonal Constellation Points -->
+  <circle cx="250" cy="70" r="4.5" fill="#c084fc" filter="url(#subtleGlow)" />
+  <circle cx="380" cy="125" r="4.5" fill="#06b6d4" />
+  <circle cx="120" cy="125" r="4.5" fill="#8b5cf6" />
+  <circle cx="250" cy="420" r="5" fill="#10b981" filter="url(#subtleGlow)" />
+</svg>
