@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Lock, Unlock, Vote, FileText, Award, CheckCircle2, ShieldCheck, Download, Sparkles, Send } from 'lucide-react';
+import { Lock, Unlock, FileText, Award, CheckCircle2, ShieldCheck, Download, Sparkles, Key, ExternalLink } from 'lucide-react';
 import { VerificationResult } from '../lib/types';
+import { DEPLOYED_CONTRACT_ADDRESS } from '../lib/midnight';
 
 interface GatedContentProps {
   isVerified: boolean;
@@ -13,13 +14,17 @@ export const GatedContent: React.FC<GatedContentProps> = ({
   isVerified,
   verificationResult,
 }) => {
-  const [activeTab, setActiveTab] = useState<'alpha' | 'dao' | 'credential'>('alpha');
-  const [selectedProposalVote, setSelectedProposalVote] = useState<string | null>(null);
-  const [voteSubmitted, setVoteSubmitted] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<'alpha' | 'proof' | 'credential'>('alpha');
 
-  const handleCastVote = () => {
-    if (!selectedProposalVote) return;
-    setVoteSubmitted(true);
+  const handleDownloadProof = () => {
+    if (!verificationResult) return;
+    const proofBlob = new Blob([JSON.stringify(verificationResult, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(proofBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `privapass-proof-${verificationResult.txHash.slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   if (!isVerified) {
@@ -33,7 +38,7 @@ export const GatedContent: React.FC<GatedContentProps> = ({
             Gated VIP Area Restricted
           </h3>
           <p className="text-xs sm:text-sm text-gray-400 mb-6 leading-relaxed">
-            This module requires a verified Zero-Knowledge PrivaPass proof. Submit your confidential credentials in the portal above to unlock anonymous DAO governance and confidential intel.
+            This module requires a verified Zero-Knowledge PrivaPass proof. Submit your confidential credentials in the portal above to unlock confidential intel and cryptographic attestations.
           </p>
           <div className="px-3.5 py-1.5 rounded-full bg-violet-950/60 border border-violet-800/40 text-violet-300 text-xs font-mono">
             Waiting for Compact <code className="text-violet-200">verifyAccess()</code> validation
@@ -76,15 +81,15 @@ export const GatedContent: React.FC<GatedContentProps> = ({
           </button>
 
           <button
-            onClick={() => setActiveTab('dao')}
+            onClick={() => setActiveTab('proof')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              activeTab === 'dao'
+              activeTab === 'proof'
                 ? 'bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]'
                 : 'text-gray-400 hover:text-gray-200'
             }`}
           >
-            <Vote className="w-3.5 h-3.5" />
-            <span>Private DAO Vote</span>
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>On-Chain Attestation</span>
           </button>
 
           <button
@@ -129,7 +134,7 @@ export const GatedContent: React.FC<GatedContentProps> = ({
 
             <div className="p-4 rounded-xl bg-obsidian-950/80 border border-cyan-900/40">
               <span className="text-xs font-mono text-cyan-400 block mb-1">PRIVACY ROUTER EPOCH</span>
-              <span className="text-lg font-bold text-white font-mono">Epoch #42 (Active)</span>
+              <span className="text-lg font-bold text-white font-mono">Preprod Epoch (Active)</span>
               <p className="text-[11px] text-gray-400 mt-1">
                 Synchronized with Lace DApp Connector and Preprod prover nodes.
               </p>
@@ -138,64 +143,59 @@ export const GatedContent: React.FC<GatedContentProps> = ({
         </div>
       )}
 
-      {/* Tab 2: Anonymous DAO Voting */}
-      {activeTab === 'dao' && (
+      {/* Tab 2: On-Chain Proof & Attestation */}
+      {activeTab === 'proof' && (
         <div className="space-y-4 animate-fadeIn">
           <div className="p-4 rounded-xl bg-obsidian-900/90 border border-emerald-500/30">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-bold text-white">
-                Proposal #014: Enable Multi-Asset Confidential Escrow on Midnight
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <Key className="w-4 h-4 text-emerald-400" />
+                <span>Zero-Knowledge Proof Attestation</span>
               </h4>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">
-                100% Anonymous Ballot
+                SucceedEntirely
               </span>
             </div>
+            
             <p className="text-xs text-gray-400 mb-4">
-              Cast your vote using your zero-knowledge credential token. Your wallet address is never linked to your choice on-chain.
+              Your confidential credential proof has been evaluated and confirmed on Midnight Preprod via Compact circuit constraints.
             </p>
 
-            {voteSubmitted ? (
-              <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 flex items-center gap-3 text-xs font-mono text-emerald-300">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span>Zero-knowledge ballot cast anonymously on Midnight Preprod! Vote token recorded without voter linkage.</span>
+            <div className="space-y-2 text-xs font-mono mb-4">
+              <div className="p-3 rounded-lg bg-obsidian-950 border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-gray-400">Transaction ID:</span>
+                <span className="text-emerald-300 break-all">{verificationResult?.txHash}</span>
               </div>
-            ) : (
-              <div className="space-y-2">
-                {['Approve & Deploy Upgrade', 'Reject Proposal', 'Abstain'].map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => setSelectedProposalVote(option)}
-                    className={`w-full p-3 rounded-xl text-xs font-mono text-left flex items-center justify-between border transition-all ${
-                      selectedProposalVote === option
-                        ? 'bg-emerald-900/40 border-emerald-400 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                        : 'bg-obsidian-950 border-gray-800 text-gray-300 hover:border-gray-700'
-                    }`}
-                  >
-                    <span>{option}</span>
-                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                      selectedProposalVote === option ? 'border-emerald-400 bg-emerald-500' : 'border-gray-600'
-                    }`}>
-                      {selectedProposalVote === option && <CheckCircle2 className="w-3 h-3 text-white" />}
-                    </div>
-                  </button>
-                ))}
+              <div className="p-3 rounded-lg bg-obsidian-950 border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-gray-400">Deployed Contract:</span>
+                <span className="text-cyan-300 break-all">{DEPLOYED_CONTRACT_ADDRESS}</span>
+              </div>
+              <div className="p-3 rounded-lg bg-obsidian-950 border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-gray-400">Nullifier Status:</span>
+                <span className="text-emerald-400 font-semibold">Recorded (Replay Protected)</span>
+              </div>
+            </div>
 
-                <button
-                  type="button"
-                  onClick={handleCastVote}
-                  disabled={!selectedProposalVote}
-                  className={`w-full mt-3 py-3 rounded-xl text-xs font-bold font-mono flex items-center justify-center gap-2 transition-all ${
-                    selectedProposalVote
-                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]'
-                      : 'bg-obsidian-800 text-gray-600 cursor-not-allowed'
-                  }`}
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Submit Anonymous ZK Vote</span>
-                </button>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleDownloadProof}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Export Proof JSON</span>
+              </button>
+              
+              <a
+                href={`https://preprod.midnightexplorer.com/contracts/0x${DEPLOYED_CONTRACT_ADDRESS.replace(/^0x/, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 rounded-xl bg-obsidian-950 hover:bg-obsidian-800 border border-gray-700 text-gray-300 hover:text-white text-xs font-mono flex items-center gap-2 transition-all"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>View in Midnight Explorer</span>
+              </a>
+            </div>
           </div>
         </div>
       )}
@@ -212,7 +212,7 @@ export const GatedContent: React.FC<GatedContentProps> = ({
             Midnight PrivaPass Verified Credential
           </h4>
           <p className="text-xs text-gray-400 max-w-md mx-auto mb-4 font-mono">
-            ZK Authorization Token • Compact verifyAccess() • Proof Hash: {verificationResult?.proofHash}
+            ZK Authorization Token • Compact verifyAccess() • Contract: {DEPLOYED_CONTRACT_ADDRESS.slice(0, 16)}...
           </p>
 
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-xs font-mono text-emerald-300">
