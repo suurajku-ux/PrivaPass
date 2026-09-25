@@ -5,19 +5,22 @@
 </div>
 
 [![Product X Profile](https://img.shields.io/badge/Product_X_Profile-@PrivaPassweb3-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/PrivaPassweb3)
+[![Midnight Explorer](https://img.shields.io/badge/Preprod_Contract-0xf625ba...ac84d-4F46E5?style=flat-square&logo=polkadot&logoColor=white)](https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-priva--pass--mocha.vercel.app-8b5cf6?style=flat-square&logo=vercel)](https://priva-pass-mocha.vercel.app/)
 [![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
-[![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-06b6d4?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
-[![Smart Contract](https://img.shields.io/badge/Contract-Compact_v0.20+-70FFBE?style=flat-square)](contract/priva_pass.compact)
-[![Tests](https://img.shields.io/badge/Tests-5%2F5_Passing-10b981?style=flat-square)](tests/priva_pass.test.ts)
+[![Proposal](https://img.shields.io/badge/Proposal-PROPOSAL.md-blue?style=flat-square&logo=markdown)](PROPOSAL.md)
+[![Judge Guide](https://img.shields.io/badge/Judge_Guide-PREPROD__USERS.md-orange?style=flat-square&logo=readme)](PREPROD_USERS.md)
+[![Tests](https://img.shields.io/badge/Tests-12%2F12_Passing-10b981?style=flat-square)](tests/)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
 
 > 🐦 **Official Product X Profile**: **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** (`@PrivaPassweb3`)  
 > 🚀 **Live dApp Website**: **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)**  
-> 📹 **Interactive Demo Video**: **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)**
+> 📹 **Interactive Demo Video**: **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)**  
+> 📄 **Product Architecture Proposal**: **[`PROPOSAL.md`](PROPOSAL.md)**  
+> 🧪 **Judge & Tester Evaluation Guide**: **[`PREPROD_USERS.md`](PREPROD_USERS.md)**
 
 > **Production-Grade Midnight Network Decentralized Application (dApp)**  
-> Built with **Midnight Compact**, **Midnight.js SDK**, **Lace Wallet Connector**, and **Next.js / Tailwind CSS**.
+> Built with **Midnight Compact (v0.31.1)**, **Midnight.js SDK**, **Lace Wallet Connector**, and **Next.js / Tailwind CSS**.
 
 ---
 
@@ -33,7 +36,7 @@
 | **Midnight Explorer Link** | **[https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d](https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d)** |
 | **Target Network** | Midnight Preprod Testnet |
 | **Deployment Pipeline** | Automated GitHub Actions (`.github/workflows/deploy.yml`) |
-| **Smart Contract Language** | **Midnight Compact (`v0.20+`)** |
+| **Smart Contract Language** | **Midnight Compact (`v0.31.1`)** |
 | **ZK Proving Engine** | Halo2 / Compact Zero-Knowledge Prover |
 | **DUST Synchronization** | Optimized 5,000-event batch sync & WASM Heap Patched |
 
@@ -48,7 +51,9 @@
 
 ---
 
-## 🚀 1. Level-3 Product Proposal & Hackathon Submission
+## 🚀 1. Level-3 Product Proposal & Core Concept
+
+*For the comprehensive architecture and market proposal, see [`PROPOSAL.md`](PROPOSAL.md).*
 
 ### 📌 Project Name: **PrivaPass**
 ### 💡 Core Concept
@@ -118,8 +123,8 @@ sequenceDiagram
     participant Preprod as 🌐 Midnight Preprod Ledger
 
     User->>UI: Input Secret Passkey & Identity Salt
-    UI->>Circuit: Ingest Local Witness (getSecretPasskey, getIdentitySalt)
-    Note over Circuit: Compute H(Passkey, Salt)<br/>Assert commitment == AllowlistRoot
+    UI->>Circuit: Ingest Local Witness (secretKey, merklePath, pathDirections)
+    Note over Circuit: Compute H(Passkey, Salt)<br/>Assert commitment in AllowlistRoot
     Circuit-->>UI: Zero-Knowledge SNARK Proof Synthesized
     UI->>Wallet: Request Proof Transaction Authorization
     Wallet-->>UI: User Signature Approved
@@ -133,35 +138,30 @@ sequenceDiagram
 
 ## 📜 3. Smart Contract (`priva_pass.compact`)
 
-The smart contract is written in Midnight's **Compact** language (`>= 0.20.0`) and is located in [`contract/priva_pass.compact`](contract/priva_pass.compact).
+The smart contract is written in Midnight's **Compact** language (`v0.31.1`) and is located in [`contract/priva_pass.compact`](contract/priva_pass.compact).
 
 ### Key Features:
-- **`witness getSecretPasskey(): Bytes[32]`**: Ingests private secret passkey.
-- **`witness getIdentitySalt(): Bytes[32]`**: Ingests private salt.
+- **`witness getSecretPasskey(): Bytes[32]`**: Ingests private secret passkey into local ZK constraint engine.
+- **`witness getIdentitySalt(): Bytes[32]`**: Ingests private salt to prevent rainbow-table analysis.
 - **`verifyAccess(expectedCommitment, currentTime): Boolean`**: Core circuit verifying commitment against registered root, updating state, and selectively executing `disclose(true)`.
 - **`initializePortal(adminPk, initialRoot)`**: One-time constructor circuit.
 - **`setPortalActive(active)` & `updateAllowlistRoot(newRoot)`**: Admin management circuits protected by admin public key hash assertion.
 
 ---
 
-## 🐦 4. Step 4: Active Product X (Twitter) Profile
+## 🐦 4. Active Product X (Twitter) Profile
 
-As part of the mandatory **Level-3 Midnight Ecosystem Submission Criteria (Step 4: Product X Profile)**, PrivaPass maintains an active public social presence on X (formerly Twitter) dedicated to communicating zero-knowledge architecture updates, Midnight Preprod deployment milestones, and developer engagement.
+As part of the mandatory **Level-3 Midnight Ecosystem Submission Criteria (Product X Profile)**, PrivaPass maintains an active public presence on X (formerly Twitter) dedicated to communicating zero-knowledge architecture updates, Midnight Preprod deployment milestones, and developer engagement.
 
-[![Follow on X](https://img.shields.io/badge/Follow_on_X-@PrivaPassZK-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/PrivaPassZK)
+[![Follow on X](https://img.shields.io/badge/Follow_on_X-@PrivaPassweb3-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/PrivaPassweb3)
 
 | Parameter | Official Value |
 |---|---|
-| **Product X (Twitter) URL** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** |
-| **Product X Handle** | `@PrivaPassZK` |
+| **Product X (Twitter) URL** | **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** |
+| **Product X Handle** | `@PrivaPassweb3` |
 | **Product Bio** | *"Zero-Knowledge Confidential Credentials & Private Allowlist Protocol built natively on Midnight Network with Compact smart contracts. Visible proof, invisible data."* |
 | **Developer / Author Handle** | **[@suurajku_ux](https://x.com/suurajku_ux)** |
-| **Primary Topics Covered** | • Midnight Compact v0.20+ Circuit constraints and witness sandboxing<br/>• In-browser ZK-SNARK proof generation with Lace wallet integration<br/>• Preprod testnet contract deployment logs and public state verification events<br/>• Confidential DAO governance & accredited investor allowlists |
-
-### 📢 Recent Product X Announcements & Updates:
-1. **Genesis Protocol Launch Announcement**: Introducing PrivaPass on Midnight Preprod testnet with zero-knowledge private witness isolation and Compact v0.20 smart contracts.
-2. **Circuit Verification Benchmarks**: 100% confidential passkey and identity salt commitment evaluations with `disclose(true)` selective ledger reporting.
-3. **Lace Wallet DApp Connector Integration**: Seamless in-browser proof authorization on Midnight Preprod testnet.
+| **Primary Topics Covered** | • Midnight Compact v0.31.1 Circuit constraints and witness sandboxing<br/>• In-browser ZK-SNARK proof generation with Lace wallet integration<br/>• Preprod testnet contract deployment logs and public state verification events<br/>• Confidential DAO governance & accredited investor allowlists |
 
 ---
 
@@ -173,7 +173,7 @@ Built with **Next.js (App Router)**, **Tailwind CSS**, and **Lucide Icons** adhe
 - **Live Verification Radar**: Animated radar sweeping component tracking real-time verified claims counter and allowlist root state.
 - **Confidential Verification Portal**: Masked passkey input, witness badges, and quick-test preset credentials.
 - **Multi-Stage ZK Proof Modal**: Visual progress bar tracking local witness isolation $\rightarrow$ ZK-SNARK synthesis $\rightarrow$ Preprod relay $\rightarrow$ gate unlock.
-- **Dynamic Gated Content Panel**: Unlocked VIP area featuring **Confidential Intel Manifesto**, **100% Anonymous DAO Voting**, and **Verifiable ZK Credential Badge**.
+- **Dynamic Gated Content Panel**: Unlocked VIP area featuring **Confidential Intel Manifesto**, **100% Anonymous DAO Voting**, and **Verifiable ZK Credential Vault**.
 
 ---
 
@@ -188,18 +188,17 @@ Built with **Next.js (App Router)**, **Tailwind CSS**, and **Lucide Icons** adhe
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/PrivaPass.git
+git clone https://github.com/suurajku-ux/PrivaPass.git
 cd PrivaPass
 
 # 2. Install dependencies
 npm install
 
 # 3. Compile the Compact smart contract
-npm run compile:contract
-# or directly:
-# compact compile contract/priva_pass.compact --output contract/managed
+mkdir -p contract/managed
+compact compile contract/priva_pass.compact ./contract/managed
 
-# 4. Run automated unit & integration tests
+# 4. Run automated unit & integration test suites (12 tests)
 npm test
 
 # 5. Start the local development server
@@ -210,21 +209,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to interact 
 
 ---
 
-## 🧪 7. Automated Testing Suite (100% Passing)
+## 🧪 7. Automated Testing Suite (12/12 Passing)
 
-PrivaPass includes a comprehensive Vitest automated test suite verifying all Compact ZK circuit constraints, private witness isolation, and Preprod state assertions:
+PrivaPass includes a comprehensive Vitest automated test suite structured across 3 dedicated test files verifying Compact ZK circuit constraints, private witness isolation, Merkle commitments, and Preprod state assertions:
+
+| Test File | Test Cases | Scope / Verification Focus |
+| :--- | :--- | :--- |
+| [`tests/priva_pass.test.ts`](tests/priva_pass.test.ts) | 4 Tests | Compact Circuit verification, witness isolation, deterministic commitments, live Preprod endpoint configuration |
+| [`tests/credential.test.ts`](tests/credential.test.ts) | 5 Tests | Merkle leaf generation, collision resistance, invalid key rejection, salt boundary entropy, privacy invariants |
+| [`tests/counter.test.ts`](tests/counter.test.ts) | 3 Tests | Public claim counter monotonicity, emergency portal deactivation, on-chain ledger state schema consistency |
 
 <div align="center">
-  <img src="image.png" alt="PrivaPass 5 Passing Unit & Integration Tests" width="850" />
-  <p><em>Figure: Execution of 5 passing automated tests covering Zero-Knowledge Witness Isolation, Circuit Constraints, and Preprod State Assertions.</em></p>
+  <img src="image.png" alt="PrivaPass Passing Automated Tests" width="850" />
 </div>
-
-### 🔍 Verified Test Cases:
-1. **Credential Privacy (Valid Passkey Verification)**: Proves that a valid secret passkey & salt evaluates the ZK circuit, grants access (`isAccessGranted: true`), and increments the public claims counter on Midnight Preprod.
-2. **Invalid Key Rejection (Constraint Enforcement)**: Asserts that incorrect passkeys or mismatched witnesses fail Zero-Knowledge constraints and are strictly rejected without mutating state.
-3. **State Assertion (Inactive Gate Policy)**: Asserts that a paused verification portal strictly rejects all proof submissions.
-4. **Witness Isolation Guarantee (Confidentiality Protection)**: Verifies that raw passkeys, identity salts, and off-chain preimages are never leaked to public ledger state or transaction logs.
-5. **Deterministic Commitment (Cryptographic Hash Validation)**: Verifies that local commitment calculations match registered allowlist Merkle entries.
 
 Run the test suite with:
 ```bash
@@ -235,18 +232,17 @@ npm test
 
 ## 🔄 8. CI/CD Pipeline (GitHub Actions)
 
-Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) validating Compact contract syntax, executing the 5-part Vitest test suite, and creating an optimized Next.js production build:
+Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) that explicitly installs the Midnight Compact compiler CLI, compiles `contract/priva_pass.compact`, executes all 12 Vitest tests, and validates the Next.js production build:
 
 <div align="center">
   <img src="image-1.png" alt="PrivaPass GitHub Actions CI/CD Pipeline Passing" width="850" />
-  <p><em>Figure: Automated GitHub Actions CI/CD pipeline runs verifying build integrity, Compact smart contract syntax, and test suites.</em></p>
 </div>
 
 ### ⚙️ Pipeline Verification Steps:
-1. **Repository Checkout & Environment Setup**: Checks out source code and configures Node.js v22 runtime with npm caching.
+1. **Repository Checkout & Setup**: Configures Node.js v22 runtime with npm caching.
 2. **TypeScript Static Typecheck**: Executes strict `npx tsc --noEmit` across all modules.
-3. **Compact Contract Linting & Verification**: Validates `contract/priva_pass.compact` syntax and `compiler.json` configuration.
-4. **Automated Test Suite**: Runs all 5 Vitest unit and integration tests (`npm test`).
+3. **Explicit Compact Compilation**: Downloads and runs `compact compile contract/priva_pass.compact ./contract/managed` to generate contract bindings.
+4. **Automated Test Suite**: Runs all 12 Vitest unit and integration tests (`npm test`).
 5. **Production Build Generation**: Compiles and verifies the optimized Next.js static production bundle (`npm run build`).
 
 ---
@@ -255,15 +251,16 @@ Every commit and pull request triggers an automated GitHub Actions pipeline ([`.
 
 | Parameter | Link / Reference |
 |---|---|
-| **Official Product X (Twitter)** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`) |
+| **Official Product X (Twitter)** | **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** (`@PrivaPassweb3`) |
 | **Author / Developer** | [suurajku-ux](https://github.com/suurajku-ux) |
 | **Developer X (Twitter)** | [https://x.com/suurajku_ux](https://x.com/suurajku_ux) (`@suurajku_ux`) |
 | **GitHub Profile** | [https://github.com/suurajku-ux](https://github.com/suurajku-ux) |
 | **Project Repository** | [https://github.com/suurajku-ux/PrivaPass](https://github.com/suurajku-ux/PrivaPass) |
 | **Live Web App (Vercel)** | [https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/) |
 | **Demo Video Walkthrough** | [https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9) |
+| **Preprod Explorer Contract** | [0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d](https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d) |
 | **Target Network** | Midnight Preprod Testnet |
-| **Contract Language** | Midnight Compact (`v0.20+`) |
+| **Contract Language** | Midnight Compact (`v0.31.1`) |
 | **License** | MIT Open Source License |
 
 ---
@@ -272,4 +269,3 @@ Every commit and pull request triggers an automated GitHub Actions pipeline ([`.
 
 MIT License — Developed for the Midnight Network Ecosystem by [suurajku-ux](https://github.com/suurajku-ux).  
 Built with [Midnight Compact](https://docs.midnight.network) and [Next.js](https://nextjs.org).
-

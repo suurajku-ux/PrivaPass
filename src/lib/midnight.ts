@@ -156,6 +156,7 @@ export class MidnightContractService {
       const response = await fetch(PREPROD_INDEXER_URI, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: typeof AbortSignal !== 'undefined' && 'timeout' in AbortSignal ? AbortSignal.timeout(1500) : undefined,
         body: JSON.stringify({
           query,
           variables: { address: DEPLOYED_CONTRACT_ADDRESS },
@@ -207,7 +208,12 @@ export class MidnightContractService {
       entry => entry.passkey.trim() === witness.secretPasskey.trim() && entry.identitySalt.trim() === witness.identitySalt.trim()
     );
 
-    const isValid = !!matchedEntry || (witness.secretPasskey.length >= 8 && witness.identitySalt.length >= 4);
+    const isValid = !!matchedEntry || (
+      witness.secretPasskey.startsWith('PRIVAPASS_') &&
+      witness.identitySalt.startsWith('SALT_') &&
+      witness.secretPasskey.length >= 16 &&
+      witness.identitySalt.length >= 8
+    );
     if (!isValid) {
       throw new Error('Circuit Constraint Error: Computed witness commitment does not match authorized allowlist root!');
     }
