@@ -4,7 +4,7 @@
   <p><strong>Visible Proof. Invisible Data. Native Midnight Network Protocol.</strong></p>
 </div>
 
-[![Product X Profile](https://img.shields.io/badge/Product_X_Profile-@PrivaPassZK-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/PrivaPassZK)
+[![Product X Profile](https://img.shields.io/badge/Product_X_Profile-@PrivaPassweb3-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/PrivaPassweb3)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-priva--pass--mocha.vercel.app-8b5cf6?style=flat-square&logo=vercel)](https://priva-pass-mocha.vercel.app/)
 [![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
 [![Midnight Network](https://img.shields.io/badge/Network-Midnight_Preprod-06b6d4?style=flat-square&logo=blockchain)](https://preprod.midnight.network)
@@ -12,7 +12,7 @@
 [![Tests](https://img.shields.io/badge/Tests-5%2F5_Passing-10b981?style=flat-square)](tests/priva_pass.test.ts)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
 
-> 🐦 **Official Product X Profile**: **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`)  
+> 🐦 **Official Product X Profile**: **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** (`@PrivaPassweb3`)  
 > 🚀 **Live dApp Website**: **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)**  
 > 📹 **Interactive Demo Video**: **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)**
 
@@ -26,7 +26,7 @@
 | Parameter | Value |
 |---|---|
 | **Contract Name** | `PrivaPassProtocol` / `Gatecheck` |
-| **Official Product X Profile** | **[https://x.com/PrivaPassZK](https://x.com/PrivaPassZK)** (`@PrivaPassZK`) |
+| **Official Product X Profile** | **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** (`@PrivaPassweb3`) |
 | **Live Web Application** | **[https://priva-pass-mocha.vercel.app/](https://priva-pass-mocha.vercel.app/)** |
 | **Demo Video Walkthrough** | **[https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)** |
 | **Deployed Contract Address** | `0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d` |
