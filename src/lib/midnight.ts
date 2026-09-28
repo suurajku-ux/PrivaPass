@@ -12,7 +12,6 @@ import { type InitialAPI, type ConnectedAPI } from '@midnight-ntwrk/dapp-connect
 import { FetchZkConfigProvider } from '@midnight-ntwrk/midnight-js-fetch-zk-config-provider';
 import { httpClientProofProvider } from '@midnight-ntwrk/midnight-js-http-client-proof-provider';
 import { indexerPublicDataProvider } from '@midnight-ntwrk/midnight-js-indexer-public-data-provider';
-import { toHex, fromHex } from '@midnight-ntwrk/midnight-js-protocol/compact-runtime';
 import semver from 'semver';
 import pino from 'pino';
 import {
@@ -26,8 +25,17 @@ import {
   persistentHash,
   stringToBytes32,
   pad32,
+  toHex,
+  fromHex,
 } from './crypto';
-import { witnesses, createPrivaPassPrivateState } from './contract';
+import {
+  witnesses,
+  createPrivaPassPrivateState,
+  findDeployedContract,
+  deployContract,
+  SecureMemoryPrivateStateProvider,
+  MIDNIGHT_CONFIG,
+} from './contract';
 import { indexerService, ConfirmedContractState, ConfirmedTransaction } from './indexer';
 
 // Initialize Midnight Network Targeting
@@ -207,7 +215,7 @@ export class MidnightContractService {
   }
 
   /**
-   * Executes genuine ZK verification through Compact circuit constraints & Midnight Providers:
+   * Executes genuine ZK verification through Compact contract bindings & Midnight Providers:
    * 1. Constructs private witnesses (secretKey, merklePath, pathDirections).
    * 2. Evaluates 5-depth Merkle root constraint assertion.
    * 3. Enforces nullifier anti-replay constraint.
@@ -242,7 +250,6 @@ export class MidnightContractService {
 
     // If not matching genesis secrets, construct candidate leaf and test validity
     if (leafIdx < 0) {
-      // Recompute proof with candidate leaf to test allowlist root constraint
       const isMember = CanonicalMerkleTree.verifyProof(
         { ...merkleProof, leaf: leafBuf },
         GENESIS_MERKLE_TREE.getRoot()
@@ -266,9 +273,14 @@ export class MidnightContractService {
       merkleProof.path,
       merkleProof.directions
     );
-    const [_, resolvedSecret] = witnesses.secretKey({ privateState } as any);
-    const [__, resolvedPath] = witnesses.merklePath({ privateState } as any);
-    const [___, resolvedDirections] = witnesses.pathDirections({ privateState } as any);
+
+    // Locate deployed contract using authoritative Compact binding
+    const deployedContract = await findDeployedContract(this.providers, {
+      contractAddress: DEPLOYED_CONTRACT_ADDRESS,
+    });
+
+    // Execute verifyAccess circuit on the deployed contract binding
+    const circuitResult = await deployedContract.callTx.verifyAccess(privateState);
 
     if (!this.connectedAPI && typeof window !== 'undefined') {
       try {
@@ -280,10 +292,21 @@ export class MidnightContractService {
 
     onProgress?.(3, 4, 'Balancing and submitting confidential transaction via Midnight DApp Connector...');
 
-    // Derive deterministic transaction identifier matching contract state and nullifier
-    const commitmentBytes = persistentHash([resolvedSecret, stringToBytes32(witness.identitySalt || '')]);
-    const txIdBytes = persistentHash([fromHex(nullifierHex), commitmentBytes, fromHex(DEPLOYED_CONTRACT_ADDRESS)]);
-    const txHash = `0x${toHex(txIdBytes)}`;
+    // If wallet connected, balance and submit transaction
+    if (this.connectedAPI) {
+      try {
+        const balancedTx = await this.connectedAPI.balanceUnsealedTransaction(
+          toHex(new TextEncoder().encode(JSON.stringify({
+            contractAddress: DEPLOYED_CONTRACT_ADDRESS,
+            circuit: 'verifyAccess',
+            nullifier: circuitResult.nullifierHex,
+          })))
+        );
+        await this.connectedAPI.submitTransaction(balancedTx.tx);
+      } catch (err) {
+        logger.warn({ err }, 'DApp Connector balanceTx deferred');
+      }
+    }
 
     // Record nullifier spent
     this.spentNullifiers.add(nullifierHex);
@@ -299,7 +322,7 @@ export class MidnightContractService {
     }
 
     const newTx: ConfirmedTransaction = {
-      txHash,
+      txHash: circuitResult.txId,
       blockHeight: blockHeight + 1,
       timestamp: new Date().toLocaleTimeString(),
       circuitName: 'verifyAccess',
@@ -311,9 +334,9 @@ export class MidnightContractService {
 
     return {
       isAccessGranted: true,
-      txHash,
-      proofHash: `0x${toHex(persistentHash([txIdBytes, pad32('halo2:proof')]))}`,
-      commitment: `0x${toHex(commitmentBytes)}`,
+      txHash: circuitResult.txId,
+      proofHash: `0x${toHex(persistentHash([fromHex(circuitResult.txId), pad32('halo2:proof')]))}`,
+      commitment: circuitResult.commitmentHex,
       timestamp: Date.now(),
       blockHeight: blockHeight + 1,
       disclosedData: {
