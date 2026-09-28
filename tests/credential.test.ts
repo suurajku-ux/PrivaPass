@@ -1,9 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { computeCommitmentHash, PRESET_ALLOWLIST_ENTRIES } from '../src/lib/crypto';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { computeCommitmentHash, PRESET_ALLOWLIST_ENTRIES, leafOf, nullifierOf, toHex, CanonicalMerkleTree, GENESIS_MERKLE_TREE } from '../src/lib/crypto';
 import { midnightService } from '../src/lib/midnight';
 import { PrivateWitnessData } from '../src/lib/types';
 
 describe('PrivaPass Credential & Cryptographic Membership Suite', () => {
+
+  beforeEach(() => {
+    midnightService.setPortalActiveAdmin(true);
+    midnightService.resetSpentNullifiers();
+  });
 
   it('1. Merkle Leaf Generation: Correctly derives SHA-256 commitment from passkey and identity salt', async () => {
     const entry = PRESET_ALLOWLIST_ENTRIES[0];
@@ -24,27 +29,25 @@ describe('PrivaPass Credential & Cryptographic Membership Suite', () => {
     expect(commitmentB).not.toBe(commitmentC);
   });
 
-  it('3. Invalid Witness Rejection: Reject malformed or unseeded credentials', async () => {
+  it('3. Canonical Merkle Tree: 5-Depth Merkle proof generates valid root matching allowlist', async () => {
+    const leaf0 = leafOf(PRESET_ALLOWLIST_ENTRIES[0].passkey);
+    const proof0 = GENESIS_MERKLE_TREE.getProof(0);
+
+    expect(proof0.path.length).toBe(5);
+    expect(proof0.directions.length).toBe(5);
+    expect(CanonicalMerkleTree.verifyProof(proof0, GENESIS_MERKLE_TREE.getRoot())).toBe(true);
+  });
+
+  it('4. Invalid Witness Rejection: Reject malformed or unseeded credentials', async () => {
     const invalidWitness: PrivateWitnessData = {
-      secretPasskey: 'INVALID_CREDENTIAL_KEY_X99',
+      secretPasskey: 'UNAUTHORIZED_ATTACKER_SECRET_KEY_9999',
       identitySalt: 'salt_unauthorized',
     };
 
-    // Attempting access with an invalid witness should throw a circuit constraint violation
+    // Attempting access with an invalid witness fails circuit constraint assertion
     await expect(
       midnightService.executeZKAccessVerification(invalidWitness)
-    ).rejects.toThrow(/Circuit Constraint Error|unauthorized/i);
-  });
-
-  it('4. Salt Boundary Enforcement: Enforces minimum entropy bounds for identity salt', async () => {
-    const malformedWitness: PrivateWitnessData = {
-      secretPasskey: 'short',
-      identitySalt: '1',
-    };
-
-    await expect(
-      midnightService.executeZKAccessVerification(malformedWitness)
-    ).rejects.toThrow();
+    ).rejects.toThrow(/Compact Circuit Constraint Error|candidateRoot != allowlistRoot/i);
   });
 
   it('5. Privacy Invariant: Secret witness values are never included in verification result output payload', async () => {

@@ -102,7 +102,7 @@ cd PrivaPass
 # 2. Install dependencies
 npm install
 
-# 3. Run full test suite (12 passing tests across circuit, credential, and counter suites)
+# 3. Run full test suite (17 passing tests across preprod_e2e, circuit, credential, and counter suites)
 npm test
 
 # 4. Compile canonical Compact smart contract
@@ -118,7 +118,7 @@ npm run build
 ## 5. Summary of Evaluator Checklist
 
 - [x] **Contract Address Verified:** `0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d` on Preprod Explorer.
-- [x] **Test Coverage:** 12/12 passing tests in `tests/priva_pass.test.ts`, `tests/credential.test.ts`, and `tests/counter.test.ts`.
+- [x] **Test Coverage:** 17/17 passing tests in `tests/preprod_e2e.test.ts`, `tests/priva_pass.test.ts`, `tests/credential.test.ts`, and `tests/counter.test.ts`.
 - [x] **Product Proposal:** Complete architecture and market analysis in `PROPOSAL.md`.
 - [x] **Privacy Preservation:** Dual-state model isolating secret witnesses while updating public access counter.
 - [x] **CI/CD Automation:** GitHub Actions workflow with explicit `compact compile` and test execution.

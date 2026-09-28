@@ -5,7 +5,7 @@
 [![Midnight Network](https://img.shields.io/badge/Midnight-Preprod_Testnet-4F46E5?style=for-the-badge&logo=polkadot&logoColor=white)](https://preprod.midnightexplorer.com/contracts/0xf625ba69bc3e3eff8f7bd53a9a239f3585a92aafd338d10da8a7f52d9daac84d)
 [![Compact Language](https://img.shields.io/badge/Compact_Language-v0.31.1-7C3AED?style=for-the-badge&logo=webassembly&logoColor=white)](https://github.com/midnightntwrk/compact)
 [![Zero Knowledge](https://img.shields.io/badge/ZK_Proof-Halo2_SNARKs-06B6D4?style=for-the-badge&logo=shield&logoColor=white)](https://midnight.network)
-[![CI Pipeline](https://img.shields.io/badge/CI%2FCD-Passing_%2812%2F12_Tests%29-10B981?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/suurajku-ux/PrivaPass/actions)
+[![CI Pipeline](https://img.shields.io/badge/CI%2FCD-Passing_%2817%2F17_Tests%29-10B981?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/suurajku-ux/PrivaPass/actions)
 [![Live dApp](https://img.shields.io/badge/Live_dApp-PrivaPass_App-3B82F6?style=for-the-badge&logo=vercel&logoColor=white)](https://priva-pass-mocha.vercel.app/)
 
 **Product & Technical Architecture Proposal**  

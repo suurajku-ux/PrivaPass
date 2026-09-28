@@ -10,7 +10,7 @@
 [![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_Walkthrough-ec4899?style=flat-square&logo=googlephotos)](https://photos.app.goo.gl/8cQfGT4vxdVdxT1D9)
 [![Proposal](https://img.shields.io/badge/Proposal-PROPOSAL.md-blue?style=flat-square&logo=markdown)](PROPOSAL.md)
 [![Judge Guide](https://img.shields.io/badge/Judge_Guide-PREPROD__USERS.md-orange?style=flat-square&logo=readme)](PREPROD_USERS.md)
-[![Tests](https://img.shields.io/badge/Tests-12%2F12_Passing-10b981?style=flat-square)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-17%2F17_Passing-10b981?style=flat-square)](tests/)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Passing-10b981?style=flat-square&logo=githubactions)](https://github.com/suurajku-ux/PrivaPass/actions)
 
 > 🐦 **Official Product X Profile**: **[https://x.com/PrivaPassweb3](https://x.com/PrivaPassweb3)** (`@PrivaPassweb3`)  
@@ -209,14 +209,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to interact 
 
 ---
 
-## 🧪 7. Automated Testing Suite (12/12 Passing)
+## 🧪 7. Automated Testing Suite (17/17 Passing)
 
-PrivaPass includes a comprehensive Vitest automated test suite structured across 3 dedicated test files verifying Compact ZK circuit constraints, private witness isolation, Merkle commitments, and Preprod state assertions:
+PrivaPass includes a comprehensive Vitest automated test suite structured across 4 dedicated test files verifying Compact ZK circuit constraints, private witness isolation, Merkle commitments, replay resistance, and Preprod state assertions:
 
 | Test File | Test Cases | Scope / Verification Focus |
 | :--- | :--- | :--- |
+| [`tests/preprod_e2e.test.ts`](tests/preprod_e2e.test.ts) | 5 Tests | End-to-end Preprod verification: wallet connection, valid ZK proof generation, invalid proof rejection, nullifier replay rejection, confirmed counter update & indexer decoding |
 | [`tests/priva_pass.test.ts`](tests/priva_pass.test.ts) | 4 Tests | Compact Circuit verification, witness isolation, deterministic commitments, live Preprod endpoint configuration |
-| [`tests/credential.test.ts`](tests/credential.test.ts) | 5 Tests | Merkle leaf generation, collision resistance, invalid key rejection, salt boundary entropy, privacy invariants |
+| [`tests/credential.test.ts`](tests/credential.test.ts) | 5 Tests | Merkle leaf generation, collision resistance, canonical 5-depth tree verification, invalid key rejection, privacy invariants |
 | [`tests/counter.test.ts`](tests/counter.test.ts) | 3 Tests | Public claim counter monotonicity, emergency portal deactivation, on-chain ledger state schema consistency |
 
 <div align="center">
@@ -232,7 +233,7 @@ npm test
 
 ## 🔄 8. CI/CD Pipeline (GitHub Actions)
 
-Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) that explicitly installs the Midnight Compact compiler CLI, compiles `contract/priva_pass.compact`, executes all 12 Vitest tests, and validates the Next.js production build:
+Every commit and pull request triggers an automated GitHub Actions pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) that explicitly installs the Midnight Compact compiler CLI, compiles `contract/priva_pass.compact`, executes all 17 Vitest tests, and validates the Next.js production build:
 
 <div align="center">
   <img src="image-1.png" alt="PrivaPass GitHub Actions CI/CD Pipeline Passing" width="850" />

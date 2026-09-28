@@ -7,6 +7,7 @@ describe('PrivaPass Public Counter & Ledger Transition Suite', () => {
 
   beforeEach(() => {
     midnightService.setPortalActiveAdmin(true);
+    midnightService.resetSpentNullifiers();
   });
 
   it('1. Public State Monotonicity: Successful ZK proof verification increments verified claim counter', async () => {
@@ -20,7 +21,9 @@ describe('PrivaPass Public Counter & Ledger Transition Suite', () => {
     expect(result.disclosedData.granted).toBe(true);
     expect(result.disclosedData.counterIncrement).toBe(1);
     expect(result.txHash).toBeDefined();
-    expect(result.proofHash).toMatch(/^halo2_zk_proof_/);
+    expect(result.txHash.startsWith('0x')).toBe(true);
+    expect(result.proofHash).toBeDefined();
+    expect(result.proofHash.startsWith('0x')).toBe(true);
   });
 
   it('2. Admin Emergency Controls: Deactivated portal rejects ZK verification attempts gracefully', async () => {

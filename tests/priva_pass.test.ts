@@ -5,6 +5,11 @@ import { PrivateWitnessData } from '../src/lib/types';
 
 describe('PrivaPass Compact Circuit & Midnight.js Integration Test Suite', () => {
 
+  beforeEach(() => {
+    midnightService.setPortalActiveAdmin(true);
+    midnightService.resetSpentNullifiers();
+  });
+
   it('1. Credential Privacy: Valid secret passkey & salt generates valid ZK proof and updates public counter', async () => {
     const genesisEntry = PRESET_ALLOWLIST_ENTRIES[0];
     const witness: PrivateWitnessData = {
@@ -18,7 +23,9 @@ describe('PrivaPass Compact Circuit & Midnight.js Integration Test Suite', () =>
     expect(result.disclosedData.granted).toBe(true);
     expect(result.disclosedData.counterIncrement).toBe(1);
     expect(result.txHash).toBeDefined();
+    expect(result.txHash.startsWith('0x')).toBe(true);
     expect(result.proofHash).toBeDefined();
+    expect(result.proofHash.startsWith('0x')).toBe(true);
   });
 
   it('2. Witness Isolation: Secret passkey & identity salt are strictly protected and never leaked to public ledger state', async () => {
